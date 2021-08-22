@@ -16,12 +16,12 @@ internal class MemberRepositoryTest(@Autowired private val memberRepository: Mem
 
     @Test
     fun testMember() {
-        val member = Member(username = "memberA")
-        val savedMember = memberRepository.save(member)
-        val findMember = memberRepository.findByIdOrNull(savedMember.id)
-
-        Assertions.assertThat(findMember?.id).isEqualTo(member.id)
-        Assertions.assertThat(findMember?.username).isEqualTo(member.username)
-        Assertions.assertThat(findMember).isEqualTo(member)
+//        val member = Member(username = "memberB")
+//        val savedMember = memberRepository.save(member)
+//        val findMember = memberRepository.findByIdOrNull(savedMember.id)
+//
+//        Assertions.assertThat(findMember?.id).isEqualTo(member.id)
+//        Assertions.assertThat(findMember?.username).isEqualTo(member.username)
+//        Assertions.assertThat(findMember).isEqualTo(member)
     }
 }

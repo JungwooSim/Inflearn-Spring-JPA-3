@@ -1,12 +1,20 @@
 package me.study.datajpa.entity
 
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 class Member (
     @Id @GeneratedValue
     val id: Long? = null,
-    val username: String
-)
+    val username: String = "",
+    val age: Int = 0,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
+    var team: Team? = null
+) {
+    fun changeTeam(team: Team) {
+        this.team = team
+        team.members.add(this)
+    }
+}
