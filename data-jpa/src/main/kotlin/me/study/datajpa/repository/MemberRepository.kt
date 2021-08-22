@@ -4,4 +4,6 @@ import me.study.datajpa.entity.Member
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface MemberRepository : JpaRepository<Member, Long> {
+
+    fun findByUsernameAndAgeGreaterThan(userName: String, age: Int): MutableList<Member>
 }

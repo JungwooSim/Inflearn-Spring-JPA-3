@@ -1,7 +1,7 @@
 package me.study.datajpa.repository
 
 import me.study.datajpa.entity.Member
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -20,9 +20,9 @@ internal class MemberRepositoryTest(@Autowired private val memberRepository: Mem
         val savedMember = memberRepository.save(member)
         val findMember = memberRepository.findByIdOrNull(savedMember.id)
 
-        Assertions.assertThat(findMember?.id).isEqualTo(member.id)
-        Assertions.assertThat(findMember?.username).isEqualTo(member.username)
-        Assertions.assertThat(findMember).isEqualTo(member)
+        assertThat(findMember?.id).isEqualTo(member.id)
+        assertThat(findMember?.username).isEqualTo(member.username)
+        assertThat(findMember).isEqualTo(member)
     }
 
     @Test
@@ -35,17 +35,30 @@ internal class MemberRepositoryTest(@Autowired private val memberRepository: Mem
         //단건 조회 검증
         val findMember1 = memberRepository.findById(member1.id!!).get()
         val findMember2 = memberRepository.findById(member2.id!!).get()
-        Assertions.assertThat(findMember1).isEqualTo(member1)
-        Assertions.assertThat(findMember2).isEqualTo(member2)
+        assertThat(findMember1).isEqualTo(member1)
+        assertThat(findMember2).isEqualTo(member2)
 
         //리스트 조회 검증
         val count: Long = memberRepository.count()
-        Assertions.assertThat(count).isEqualTo(2)
+        assertThat(count).isEqualTo(2)
 
         //삭제 검증
         memberRepository.delete(member1)
         memberRepository.delete(member2)
         val deletedCount = memberRepository.count()
-        Assertions.assertThat(deletedCount).isEqualTo(0)
+        assertThat(deletedCount).isEqualTo(0)
+    }
+
+    @Test
+    fun findByUsernameAndAgeGreaterThan() {
+        val m1 = Member(username = "AAA", age = 10)
+        val m2 = Member(username = "AAA", age = 20)
+        memberRepository.save(m1)
+        memberRepository.save(m2)
+
+        val result = memberRepository.findByUsernameAndAgeGreaterThan("AAA", 15)
+        assertThat(result[0].username).isEqualTo("AAA");
+        assertThat(result[0].age).isEqualTo(20);
+        assertThat(result.size).isEqualTo(1);
     }
 }
