@@ -73,4 +73,16 @@ internal class MemberRepositoryTest(@Autowired private val memberRepository: Mem
         val findMember = result[0]
         assertThat(findMember).isEqualTo(m1);
     }
+
+    @Test
+    fun testQuery() {
+        val m1 = Member(username = "AAA", age = 10)
+        val m2 = Member(username = "AAA", age = 20)
+        memberRepository.save(m1)
+        memberRepository.save(m2)
+
+        val result: MutableList<Member> = memberRepository.findUser("AAA", 10)
+        val findMember = result[0]
+        assertThat(findMember).isEqualTo(m1);
+    }
 }
