@@ -1,6 +1,8 @@
 package me.study.datajpa.repository
 
+import me.study.datajpa.dto.MemberDto
 import me.study.datajpa.entity.Member
+import me.study.datajpa.entity.Team
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,7 +14,9 @@ import org.springframework.transaction.annotation.Transactional
 @SpringBootTest
 @Transactional
 @Rollback(false)
-internal class MemberRepositoryTest(@Autowired private val memberRepository: MemberRepository) {
+internal class MemberRepositoryTest(
+    @Autowired private val memberRepository: MemberRepository,
+    @Autowired private val teamRepository: TeamRepository) {
 
     @Test
     fun testMember() {
@@ -84,5 +88,30 @@ internal class MemberRepositoryTest(@Autowired private val memberRepository: Mem
         val result: MutableList<Member> = memberRepository.findUser("AAA", 10)
         val findMember = result[0]
         assertThat(findMember).isEqualTo(m1);
+    }
+
+    @Test
+    fun findUsernameList() {
+        val m1 = Member(username = "AAA", age = 10)
+        val m2 = Member(username = "BBB", age = 20)
+        memberRepository.save(m1)
+        memberRepository.save(m2)
+
+        val usernameList: MutableList<String> = memberRepository.findUsernameList()
+
+        usernameList.forEach { println(it) }
+    }
+
+    @Test
+    fun findMemberDto() {
+        val team = Team(name = "teamA")
+        teamRepository.save(team)
+
+        val m1 = Member(username = "AAA", age = 10, team = team)
+        memberRepository.save(m1)
+
+        val memberDto: MutableList<MemberDto> = memberRepository.findMemberDto()
+
+        memberDto.forEach { println(it) }
     }
 }
