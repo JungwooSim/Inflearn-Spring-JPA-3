@@ -3,6 +3,10 @@ package me.study.datajpa.entity
 import javax.persistence.*
 
 @Entity
+@NamedQuery(
+    name="Member.findByUsername",
+    query="select m from Member m where m.username = :username"
+)
 class Member (
     @Id @GeneratedValue
     val id: Long? = null,

@@ -61,4 +61,16 @@ internal class MemberRepositoryTest(@Autowired private val memberRepository: Mem
         assertThat(result[0].age).isEqualTo(20);
         assertThat(result.size).isEqualTo(1);
     }
+
+    @Test
+    fun testNamedQuery() {
+        val m1 = Member(username = "AAA", age = 10)
+        val m2 = Member(username = "AAA", age = 20)
+        memberRepository.save(m1)
+        memberRepository.save(m2)
+
+        val result: MutableList<Member> = memberRepository.findByUsername("AAA")
+        val findMember = result[0]
+        assertThat(findMember).isEqualTo(m1);
+    }
 }
