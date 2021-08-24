@@ -2,6 +2,10 @@ package me.study.datajpa.repository
 
 import me.study.datajpa.dto.MemberDto
 import me.study.datajpa.entity.Member
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Slice
+import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -24,4 +28,19 @@ interface MemberRepository : JpaRepository<Member, Long> {
 
     @Query("select m from Member m where m.username in :names")
     fun findByNames(@Param("names") names: MutableList<String>): MutableList<Member>
+
+    // count 쿼리 사용
+//    fun findByUsername(name: String, pageable: Pageable): Page<Member>
+
+    // count 쿼리 사용 안함
+//    fun findByUsername(name: String, pageable: Pageable): Slice<Member>
+
+    // count 쿼리 사용
+    fun findByUsername(name: String, pageable: Pageable): MutableList<Member>
+
+    fun findByUsername(name: String, sort: Sort): MutableList<Member>
+
+    // count query 분리 가능
+    @Query(value = "select m from Member m", countQuery = "select count(m.username) from Member m")
+    fun findByAge(age: Int, pageable: Pageable): Page<Member>
 }

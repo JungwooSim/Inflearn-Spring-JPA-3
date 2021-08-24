@@ -7,6 +7,9 @@ import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.annotation.Rollback
 import org.springframework.transaction.annotation.Transactional
@@ -124,5 +127,33 @@ internal class MemberRepositoryTest(
 
         val result: MutableList<Member> = memberRepository.findByNames(mutableListOf("AAA", "BBB"))
         result.forEach { println(it.username) }
+    }
+
+    @Test
+    fun paging() {
+        //given
+        memberRepository.save(Member(username = "member1", age = 10))
+        memberRepository.save(Member(username = "member2", age = 10))
+        memberRepository.save(Member(username = "member3", age = 10))
+        memberRepository.save(Member(username = "member4", age = 10))
+        memberRepository.save(Member(username = "member5", age = 10))
+
+        val pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "username"))
+        val age = 10
+
+        //when
+        val page: Page<Member> = memberRepository.findByAge(age, pageRequest)
+        val tmMap: Page<MemberDto> = page.map { member -> MemberDto(member.id!!, member.username, "") } // dto 로 쉽게 변환 가능
+
+        //then
+        val content: MutableList<Member> = page.content
+        val totalElements = page.totalElements
+
+        assertThat(content.size).isEqualTo(3)
+        assertThat(page.totalElements).isEqualTo(5)
+        assertThat(page.number).isEqualTo(0)
+        assertThat(page.totalPages).isEqualTo(2)
+        assertThat(page.isFirst).isTrue()
+        assertThat(page.hasNext()).isTrue()
     }
 }
