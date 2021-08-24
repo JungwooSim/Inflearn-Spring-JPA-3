@@ -197,4 +197,18 @@ internal class MemberRepositoryTest(
         //then
         members.forEach { println(it.team!!.name) }
     }
+
+    @Test
+    fun queryHint() {
+        //given
+        memberRepository.save(Member(username = "member1", age = 10))
+        em.flush()
+        em.clear()
+
+        //when
+        val member: Member = memberRepository.findReadOnlyByUsername("member1")
+        member.username = "member2"
+
+        em.flush() // update query 실행 하지 않음
+    }
 }

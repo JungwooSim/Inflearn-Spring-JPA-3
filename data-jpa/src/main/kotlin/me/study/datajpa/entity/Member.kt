@@ -10,7 +10,7 @@ import javax.persistence.*
 class Member (
     @Id @GeneratedValue
     val id: Long? = null,
-    val username: String = "",
+    var username: String = "",
     val age: Int = 0,
 
     @ManyToOne(fetch = FetchType.LAZY)
