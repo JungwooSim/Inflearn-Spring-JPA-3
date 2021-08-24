@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Slice
 import org.springframework.data.domain.Sort
+import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
@@ -48,4 +49,14 @@ interface MemberRepository : JpaRepository<Member, Long> {
     @Modifying(clearAutomatically = true) // jpql 실행 후 자동으로 clean 해준다.
     @Query("update Member m set m.age = m.age + 1 where m.age >= :age")
     fun bulkAgePlus(@Param("age") age: Int): Int
+
+    @Query("select m from Member m left join fetch m.team")
+    fun findMemberFetchJoin(): MutableList<Member>
+
+    @EntityGraph(attributePaths = ["team"])
+    override fun findAll(): MutableList<Member>
+
+    @EntityGraph(attributePaths = ["team"])
+    @Query("select m from Member m")
+    fun findMemberEntityGraph(): MutableList<Member>
 }

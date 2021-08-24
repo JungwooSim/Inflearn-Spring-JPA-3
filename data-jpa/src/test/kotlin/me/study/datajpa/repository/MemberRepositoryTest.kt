@@ -13,13 +13,15 @@ import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.annotation.Rollback
 import org.springframework.transaction.annotation.Transactional
+import javax.persistence.EntityManager
 
 @SpringBootTest
 @Transactional
 @Rollback(false)
 internal class MemberRepositoryTest(
     @Autowired private val memberRepository: MemberRepository,
-    @Autowired private val teamRepository: TeamRepository) {
+    @Autowired private val teamRepository: TeamRepository,
+    @Autowired private val em: EntityManager) {
 
     @Test
     fun testMember() {
@@ -171,5 +173,28 @@ internal class MemberRepositoryTest(
 
         //then
         assertThat(resultCount).isEqualTo(3)
+    }
+
+    @Test
+    fun findMemberLazy() {
+        //given
+        val teamA = Team(name = "teamA")
+        val teamB = Team(name = "teamB")
+        teamRepository.save(teamA)
+        teamRepository.save(teamB)
+        memberRepository.save(Member(username = "member1", age = 10, team = teamA))
+        memberRepository.save(Member(username = "member2", age = 20, team = teamB))
+
+        em.flush()
+        em.clear()
+
+        //when
+        // 3가지 모두 가능
+//        val members: MutableList<Member> = memberRepository.findAll()
+//        val members: MutableList<Member> = memberRepository.findMemberFetchJoin()
+        val members: MutableList<Member> = memberRepository.findMemberEntityGraph()
+
+        //then
+        members.forEach { println(it.team!!.name) }
     }
 }
