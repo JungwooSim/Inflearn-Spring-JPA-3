@@ -114,4 +114,15 @@ internal class MemberRepositoryTest(
 
         memberDto.forEach { println(it) }
     }
+
+    @Test
+    fun findByNames() {
+        val m1 = Member(username = "AAA", age = 10)
+        val m2 = Member(username = "BBB", age = 20)
+        memberRepository.save(m1)
+        memberRepository.save(m2)
+
+        val result: MutableList<Member> = memberRepository.findByNames(mutableListOf("AAA", "BBB"))
+        result.forEach { println(it.username) }
+    }
 }
