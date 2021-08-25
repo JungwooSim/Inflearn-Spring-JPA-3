@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param
 import javax.persistence.LockModeType
 import javax.persistence.QueryHint
 
-interface MemberRepository : JpaRepository<Member, Long> {
+interface MemberRepository : JpaRepository<Member, Long>, MemberRepositoryCustom {
 
     fun findByUsernameAndAgeGreaterThan(userName: String, age: Int): MutableList<Member>
 

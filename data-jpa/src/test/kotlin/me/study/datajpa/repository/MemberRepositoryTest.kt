@@ -211,4 +211,9 @@ internal class MemberRepositoryTest(
 
         em.flush() // update query 실행 하지 않음
     }
+
+    @Test
+    fun callCustom() {
+        memberRepository.findMemberCustom()
+    }
 }
