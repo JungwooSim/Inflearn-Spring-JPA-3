@@ -216,4 +216,26 @@ internal class MemberRepositoryTest(
     fun callCustom() {
         memberRepository.findMemberCustom()
     }
+
+    @Test
+    fun jpaEventBaseEntity() {
+        //given
+        val member = Member(username = "member1")
+        memberRepository.save(member)
+
+        Thread.sleep(100)
+        member.username = "member2"
+
+        em.flush()
+        em.clear()
+
+        //when
+        val findMember = memberRepository.findById(member.id!!).get()
+
+        //then
+        println("findMember.createdDate = " + findMember.createdDate)
+        println("findMember.updatedDate = " + findMember.lastModifiedDate)
+        println("findMember.createdBy = " + findMember.createBy)
+        println("findMember.lastModifiedBy = " + findMember.lastModifiedBy)
+    }
 }
