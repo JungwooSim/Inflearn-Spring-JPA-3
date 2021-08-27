@@ -38,7 +38,7 @@ class MemberController(@Autowired private val memberRepository: MemberRepository
         return page.map { MemberDto(id = it.id!!, username = it.username,teamName = "" ) }
     }
 
-    @PostConstruct
+//    @PostConstruct
     fun init() {
         for (i in 1..100) {
             val username = "name$i"

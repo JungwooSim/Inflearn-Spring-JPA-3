@@ -1,6 +1,7 @@
 package me.study.datajpa.repository
 
 import me.study.datajpa.dto.MemberDto
+import me.study.datajpa.dto.UsernameOnlyDto
 import me.study.datajpa.entity.Member
 import me.study.datajpa.entity.Team
 import org.assertj.core.api.Assertions.*
@@ -237,5 +238,37 @@ internal class MemberRepositoryTest(
         println("findMember.updatedDate = " + findMember.lastModifiedDate)
         println("findMember.createdBy = " + findMember.createBy)
         println("findMember.lastModifiedBy = " + findMember.lastModifiedBy)
+    }
+
+    @Test
+    fun projections() {
+        //given
+        memberRepository.save(Member(username = "member1", age = 10))
+        memberRepository.save(Member(username = "member2", age = 10))
+        em.flush()
+        em.clear()
+
+        //when
+//        val result: MutableList<UsernameOnly> = memberRepository.findProjectonsByUsername("member1")
+//        val result: MutableList<UsernameOnly> = memberRepository.findProjectonsByUsername("member1")
+
+        //then
+//        result.forEach { println(it.getUsername()) }
+    }
+
+    @Test
+    fun projections2() {
+        //given
+        memberRepository.save(Member(username = "member1", age = 10))
+        memberRepository.save(Member(username = "member2", age = 10))
+        em.flush()
+        em.clear()
+
+        //when
+//        val result: MutableList<UsernameOnly> = memberRepository.findProjectonsByUsername("member1")
+        val result: MutableList<UsernameOnlyDto> = memberRepository.findProjectonsByUsername("member1")
+
+        //then
+        result.forEach { println(it.username) }
     }
 }

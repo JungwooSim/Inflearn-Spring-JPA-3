@@ -1,6 +1,7 @@
 package me.study.datajpa.repository
 
 import me.study.datajpa.dto.MemberDto
+import me.study.datajpa.dto.UsernameOnlyDto
 import me.study.datajpa.entity.Member
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -64,4 +65,8 @@ interface MemberRepository : JpaRepository<Member, Long>, MemberRepositoryCustom
 
 //    @Lock(LockModeType.PESSIMISTIC_WRITE)
 //    fun findByUsername(name: String): MutableList<Member>
+
+    // 함수명은 find{...}ByUsername 으로 작성하면된다. {...} <-- 무엇이 들어와도 상관없음.
+//    fun findProjectonsByUsername(@Param("username") username: String): MutableList<UsernameOnly>
+    fun findProjectonsByUsername(@Param("username") username: String): MutableList<UsernameOnlyDto>
 }
