@@ -69,4 +69,14 @@ interface MemberRepository : JpaRepository<Member, Long>, MemberRepositoryCustom
     // 함수명은 find{...}ByUsername 으로 작성하면된다. {...} <-- 무엇이 들어와도 상관없음.
 //    fun findProjectonsByUsername(@Param("username") username: String): MutableList<UsernameOnly>
     fun findProjectonsByUsername(@Param("username") username: String): MutableList<UsernameOnlyDto>
+
+    @Query(value = "select * from member where username = ?", nativeQuery = true)
+    fun findByNativeQuery(username: String): MutableList<Member>
+
+    @Query(
+        value = "select m.id, m.username, t.name as teamName from member m left join team t",
+        countQuery = "select count(*) from member",
+        nativeQuery = true
+    )
+    fun findByNativeProjection(pageable: Pageable): Page<MemberProjection>
 }

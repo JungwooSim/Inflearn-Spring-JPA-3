@@ -271,4 +271,34 @@ internal class MemberRepositoryTest(
         //then
         result.forEach { println(it.username) }
     }
+
+    @Test
+    fun nativeQuery() {
+        //given
+        memberRepository.save(Member(username = "member1", age = 10))
+        memberRepository.save(Member(username = "member2", age = 10))
+        em.flush()
+        em.clear()
+
+        //when
+        val result: MutableList<Member> = memberRepository.findByNativeQuery("member1")
+
+        //then
+        result.forEach { println(it.username) }
+    }
+
+    @Test
+    fun nativeQuery2() {
+        //given
+        memberRepository.save(Member(username = "member1", age = 10))
+        memberRepository.save(Member(username = "member2", age = 10))
+        em.flush()
+        em.clear()
+
+        //when
+        val result: Page<MemberProjection> = memberRepository.findByNativeProjection(PageRequest.of(1, 10))
+
+        //then
+        result.forEach { println(it) }
+    }
 }
